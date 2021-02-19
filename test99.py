@@ -61,10 +61,7 @@ MFIframe=MFI.to_frame()
 
 MFIframe.columns = ['MFI']
 
-dataMFI = pd.merge(dataRSI,RSIframe,on = 'Date', how='inner')
-
-print(dataMFI)
-
+dataMFI = pd.merge(dataRSI,MFIframe,on = 'Date', how='inner')
 
 #Bollinger Bands
 rolling_mean = close.rolling(window=window_length).mean()
@@ -86,7 +83,6 @@ BUPPERframe.columns = ['Bup']
 
 totaldata = pd.merge(datalower,BUPPERframe,on = 'Date', how='inner')
 
-print(totaldata)
 
 
 
@@ -115,14 +111,35 @@ print(totaldata)
 # ax3.axhline(90, color='orange', linestyle='--')
 # ax3.set_ylabel('MFI')
 
-balance = 1000.0
+cash = 1000.0
+balance = 0.0
+balance_btc = 0;
+
+ordersize = 100;
+ 
+
+#totaldata['buysignal'] = 0 
+
+
+#totaldata['sellsignal'] = 0
 
 
 
-#for index, row in df.iterrows():
-    #print(row['c1'], row['c2'])
 
+for index, row in totaldata.iterrows():
+    
+    #if (row['RSI'] < 30 and row['MFI'] < 40 and row['Adj Close'] < lower_b and cash >= ordersize):
+    if (row['RSI'] < 30 and row['MFI'] < 40 and row['Adj Close'] < row['Blow'] and cash >= ordersize):
+          row['buysignal'] = 1
+          balance += ordersize
+          balance_btc += ordersize/row['Adj Close']
+          cash -= ordersize
 
+    if (row['RSI'] > 70 and row['MFI'] > 60 and row['Adj Close'] > row['Bup']  and balance >= ordersize):
+          row['sellsignal'] = 1
+          balance -= ordersize
+          balance_btc -= ordersize/row['Adj Close']
+          cash += ordersize
 
-
-plt.show()
+              
+          
