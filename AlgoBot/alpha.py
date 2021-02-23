@@ -9,7 +9,7 @@ std = 2
 
 window = 21
 
-start = '2020-07-17'
+start = '2016-07-17'
 end = '2021-02-11'
 
 data = web.DataReader('BTC-USD', 'yahoo', start, end)
